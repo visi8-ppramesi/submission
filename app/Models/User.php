@@ -27,6 +27,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'date_of_birth',
+        'phone',
+        'id_number',
+        'portfolio_url',
+        'social_media',
+        'current_team_id',
+        'profile_photo_path',
     ];
 
     /**

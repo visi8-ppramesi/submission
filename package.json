@@ -12,6 +12,7 @@
     "devDependencies": {
         "@inertiajs/inertia": "^0.8.2",
         "@inertiajs/inertia-vue": "^0.5.4",
+        "@mdi/font": "^5.9.55",
         "@tailwindcss/forms": "^0.2.1",
         "@tailwindcss/typography": "^0.3.0",
         "autoprefixer": "^10.0.2",
@@ -30,6 +31,7 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
+        "vue-i18n": "^8.23.0",
         "vuetify": "^2.4.5"
     }
 }

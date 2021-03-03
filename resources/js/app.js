@@ -6,12 +6,14 @@ import Vue from 'vue';
 import Vuetify from 'vuetify';
 import { App as InertiaApp, plugin as InertiaPlugin } from '@inertiajs/inertia-vue';
 import PortalVue from 'portal-vue';
+import VueI18n from 'vue-i18n'
 import 'vuetify/dist/vuetify.min.css'
 
 Vue.mixin({ methods: { route } });
 Vue.use(InertiaPlugin);
 Vue.use(PortalVue);
 Vue.use(Vuetify)
+Vue.use(VueI18n)
 
 const app = document.getElementById('app');
 
