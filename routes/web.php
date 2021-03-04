@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SubmissionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -24,20 +26,12 @@ Route::get('/', function () {
     ]);
 });
 
-Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->name('dashboard');
+// Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
+//     return Inertia::render('Dashboard');
+// })->name('dashboard');
 
-// Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/testing', function(){
-        $m = '';
-        try{
-            $m = auth()->user()->id;
-        }catch(Exception $e){
-            $m = 'nope';
-        }
-        return Inertia::render('Testing', [
-            'user' => $m
-        ]);
-    });
-// });
+Route::middleware(['auth:sanctum', 'verified'])->group(function(){
+    Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->name('dashboard');
+
+    // Route::post('/submission/submit', [SubmissionController::class, 'store'])->name('submission.store');
+});

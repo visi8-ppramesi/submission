@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <v-app>
         <jet-banner />
 
         <div class="min-h-screen bg-gray-100">
@@ -230,7 +230,7 @@
             <portal-target name="modal" multiple>
             </portal-target>
         </div>
-    </div>
+    </v-app>
 </template>
 
 <script>

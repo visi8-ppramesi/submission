@@ -42,7 +42,7 @@
                         required
                     />
                     <v-text-field
-                        v-model="repeatPass"
+                        v-model="loginData.password_confirmation"
                         label="Repeat password"
                         type="password"
                         :rules="repeatPassRule"
@@ -70,11 +70,37 @@
                     lazy-validation
                 >
                     <v-text-field
-                        v-model="personalData.fullName"
+                        v-model="personalData.full_name"
                         :rules="[v => !!v || 'Full name is required']"
                         label="Full name"
                         required
                     />
+                    <v-menu
+                        ref="menu"
+                        v-model="menu"
+                        :close-on-content-click="false"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-text-field
+                                v-model="personalData.date_of_birth"
+                                label="Birthday date"
+                                prepend-icon="mdi-calendar"
+                                readonly
+                                v-bind="attrs"
+                                v-on="on"
+                            ></v-text-field>
+                        </template>
+                        <v-date-picker
+                            ref="picker"
+                            v-model="personalData.date_of_birth"
+                            :max="new Date().toISOString().substr(0, 10)"
+                            min="1950-01-01"
+                            @change="save"
+                        ></v-date-picker>
+                    </v-menu>
                     <v-text-field
                         v-model="personalData.phone"
                         :rules="phoneNumberRules"
@@ -93,17 +119,17 @@
                         label="Portfolio URL"
                         required
                     />
-                    <div v-for="(acc, idx) in personalData.socialMedia" :key="idx" class="d-flex flex-row" :class="(idx === 0) ? 'pt-2':''">
+                    <div v-for="(acc, idx) in personalData.social_media" :key="idx" class="d-flex flex-row" :class="(idx === 0) ? 'pt-2':''">
                         <v-select
                             :items="socItems"
-                            v-model="personalData.socialMedia[idx].type"
+                            v-model="personalData.social_media[idx].type"
                             label="Social media name"
                             :rules="[v => !!v || 'Social media type required']"
                             style="width:25%"
                             class="mr-2"
                         ></v-select>
                         <v-text-field
-                            v-model="personalData.socialMedia[idx].url"
+                            v-model="personalData.social_media[idx].url"
                             :rules="urlRules"
                             label="Social media URL"
                             required
@@ -116,17 +142,30 @@
                         <!-- <v-btn v-else @click="delSocmed" class="mt-3">-</v-btn> -->
                     </div>
                 </v-form>
+
+                <div class="mt-4" v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature">
+                    <jet-label for="terms">
+                        <div class="flex items-center">
+                            <jet-checkbox name="terms" id="terms" v-model="terms" />
+
+                            <div class="ml-2">
+                                I agree to the <a target="_blank" :href="route('terms.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Terms of Service</a> and <a target="_blank" :href="route('policy.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Privacy Policy</a>
+                            </div>
+                        </div>
+                    </jet-label>
+                </div>
+
                 <v-btn
-                    @click="personalContinue"
+                    @click="submit"
                 >
-                    Continue
+                    Submit
                 </v-btn>
                 <v-btn text @click="registerStepper = 1">
                     Back
                 </v-btn>
             </v-stepper-content>
 
-            <v-stepper-step
+            <!-- <v-stepper-step
             :complete="registerStepper > 3"
             step="3"
             >
@@ -140,15 +179,7 @@
                     v-model="submissionForm"
                     lazy-validation
                 >
-                    <v-expansion-panels accordion class="px-0">
-                        title: '',
-                        description: '',
-                        story_concept: null,
-                        summary_file: null,
-                        character_design: null,
-                        world_design: null,
-                        team_profile: null,
-                        pilot_video: null
+                    <v-expansion-panels accordion class="px-0" v-model="submissionPanels">
                         <v-expansion-panel v-for="(sub, idx) in submissionData" :key="idx" class="px-0">
                             <v-expansion-panel-header class="px-0">
                                 Submission {{idx + 1}}
@@ -167,22 +198,22 @@
                                 <v-file-input
                                     v-model="submissionData[idx].story_concept"
                                     accept="application/pdf,.zip,.rar"
-                                    label="Story concept (PDF or Zip file)"
+                                    label="Story concept (PDF or Zip file, max 200 MB)"
                                 ></v-file-input>
                                 <v-file-input
                                     v-model="submissionData[idx].summary_file"
                                     accept="application/pdf,.zip,.rar"
-                                    label="Logline, synopsis, outline or script (PDF or Zip file)"
+                                    label="Logline, synopsis, outline or script (PDF or Zip file, max 200 MB)"
                                 ></v-file-input>
                                 <v-file-input
                                     v-model="submissionData[idx].character_design"
                                     accept="application/pdf,.zip,.rar"
-                                    label="Character design (PDF or Zip file)"
+                                    label="Character design (PDF or Zip file, max 200 MB)"
                                 ></v-file-input>
                                 <v-file-input
                                     v-model="submissionData[idx].world_design"
                                     accept="application/pdf,.zip,.rar"
-                                    label="World design (PDF or Zip file)"
+                                    label="World design (PDF or Zip file, max 200 MB)"
                                 ></v-file-input>
                                 <v-textarea
                                     v-model="submissionData[idx].team_profile"
@@ -205,8 +236,54 @@
                 <v-btn text @click="registerStepper = 2">
                     Back
                 </v-btn>
-            </v-stepper-content>
+            </v-stepper-content> -->
         </v-stepper>
+
+        <!-- <form @submit.prevent="submit">
+            <div>
+                <jet-label for="name" value="Name" />
+                <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" required autofocus autocomplete="name" />
+            </div>
+
+            <div class="mt-4">
+                <jet-label for="email" value="Email" />
+                <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" required />
+            </div>
+
+            <div class="mt-4">
+                <jet-label for="password" value="Password" />
+                <jet-input id="password" type="password" class="mt-1 block w-full" v-model="form.password" required autocomplete="new-password" />
+            </div>
+
+            <div class="mt-4">
+                <jet-label for="password_confirmation" value="Confirm Password" />
+                <jet-input id="password_confirmation" type="password" class="mt-1 block w-full" v-model="form.password_confirmation" required autocomplete="new-password" />
+            </div>
+
+            <div class="mt-4" v-if="$page.props.jetstream.hasTermsAndPrivacyPolicyFeature">
+                <jet-label for="terms">
+                    <div class="flex items-center">
+                        <jet-checkbox name="terms" id="terms" v-model="form.terms" />
+
+                        <div class="ml-2">
+                            I agree to the <a target="_blank" :href="route('terms.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Terms of Service</a> and <a target="_blank" :href="route('policy.show')" class="underline text-sm text-gray-600 hover:text-gray-900">Privacy Policy</a>
+                        </div>
+                    </div>
+                </jet-label>
+            </div>
+
+            <div class="flex items-center justify-end mt-4">
+                <inertia-link :href="route('login')" class="underline text-sm text-gray-600 hover:text-gray-900">
+                    Already registered?
+                </inertia-link>
+
+                <jet-button class="ml-4" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                    Register
+                </jet-button>
+            </div>
+        </form> -->
+
+        <socialstream-providers v-if="$page.props.socialstream.show" />
     </jet-authentication-card>
 </template>
 
@@ -218,6 +295,7 @@
     import JetCheckbox from "@/Jetstream/Checkbox";
     import JetLabel from '@/Jetstream/Label'
     import JetValidationErrors from '@/Jetstream/ValidationErrors'
+    import SocialstreamProviders from '@/Socialstream/Providers'
 
     export default {
         components: {
@@ -227,7 +305,8 @@
             JetInput,
             JetCheckbox,
             JetLabel,
-            JetValidationErrors
+            JetValidationErrors,
+            SocialstreamProviders
         },
 
         data() {
@@ -239,6 +318,9 @@
                 //     password_confirmation: '',
                 //     terms: false,
                 // })
+                menu: false,
+                terms: null,
+                submissionPanels: 0,
                 repeatPass: '',
                 registerStepper: 1,
                 loginForm: null,
@@ -252,11 +334,12 @@
                     'Some other stuff'
                 ],
                 personalData:{
-                    fullName: '',
+                    full_name: '',
                     phone: '',
                     id_number: '',
                     portfolio_url: '',
-                    socialMedia: [
+                    date_of_birth: null,
+                    social_media: [
                         {
                             type: '',
                             url: ''
@@ -268,6 +351,7 @@
                     email: '',
                     password: '',
                     terms: false,
+                    password_confirmation: ''
                 },
                 submissionData:[{
                     title: '',
@@ -299,7 +383,9 @@
                 ]
             }
         },
-
+        created(){
+            console.log(this.route('register'))
+        },
         methods: {
             addSubmission(){
                 this.submissionData.push({
@@ -314,18 +400,25 @@
                 })
             },
             addSocmed(){
-                this.personalData.socialMedia.push({
+                this.personalData.social_media.push({
                     type: '',
                     url: ''
                 })
             },
             delSocmed(idx){
-                this.personalData.socialMedia.splice(idx, 1)
+                this.personalData.social_media.splice(idx, 1)
             },
             submit() {
-                this.form.post(this.route('register'), {
-                    onFinish: () => this.form.reset('password', 'password_confirmation'),
-                })
+                let data = {
+                    ...this.personalData,
+                    ...this.loginData,
+                    terms: this.terms
+                }
+                data.social_media = JSON.stringify(data.social_media)
+                this.$inertia.post(this.route('register'), data)
+                // this.form.post(this.route('register'), {
+                //     onFinish: () => this.form.reset('password', 'password_confirmation'),
+                // })
             },
             loginContinue() {
                 // if(this.$refs.loginForm.validate()){
@@ -339,6 +432,14 @@
                     this.registerStepper = 3
                 }
             },
-        }
+            save (date) {
+                this.$refs.menu.save(date)
+            },
+        },
+        watch: {
+            menu (val) {
+                val && setTimeout(() => (this.$refs.picker.activePicker = 'YEAR'))
+            },
+        },
     }
 </script>

@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\SubmissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,13 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    Route::get('/testing', function(){
-        $m = '';
-        try{
-            $m = auth()->user()->id;
-        }catch(Exception $e){
-            $m = 'nope';
-        }
-        return $m;
-    });
+    Route::post('/submission/submit', [SubmissionController::class, 'store'])->name('submission.store');
+    Route::post('/submission/submit/file', [SubmissionController::class, 'storeSubmissionFile'])->name('submission.store.file');
 });

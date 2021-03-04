@@ -18,12 +18,12 @@ class CreateSubmissionsTable extends Migration
             $table->text('title');
             $table->text('description');
             $table->foreignId('user_id');
-            $table->text('story_concept_files');
-            $table->text('summary_files');
-            $table->text('character_design');
-            $table->text('world_design');
+            $table->text('story_concept_files')->nullable();
+            $table->text('summary_files')->nullable();
+            $table->text('character_design')->nullable();
+            $table->text('world_design')->nullable();
             $table->text('team_profile');
-            $table->text('pilot_video');
+            $table->text('pilot_video')->nullable();
             $table->timestamps();
         });
     }

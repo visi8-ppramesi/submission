@@ -23,20 +23,28 @@ class CreateNewUser implements CreatesNewUsers
         Validator::make($input, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'full_name' => ['required', 'string', 'max:255'],
             'password' => $this->passwordRules(),
             'terms' => Jetstream::hasTermsAndPrivacyPolicyFeature() ? ['required', 'accepted'] : '',
+            'phone' => ['required', 'string'],
+            'date_of_birth' => ['required', 'date'],
+            'phone' => ['required', 'string'],
+            'id_number' => ['required', 'string'],
+            'portfolio_url' => ['required', 'url'],
+            'social_media' => ['required', 'json'],
         ])->validate();
 
         return User::create([
             'name' => $input['name'],
             'email' => $input['email'],
+            'full_name' => $input['full_name'],
             'password' => Hash::make($input['password']),
-            'phone' => 'fuck you',
-            'date_of_birth' => date('Y-m-d H:i:s'),
-            'phone' => '978345974385987423',
-            'id_number' => '879234579834257893245',
-            'portfolio_url' => 'jhksafdhjksfdkhjsfa',
-            'social_media' => '[]',
+            'phone' => $input['phone'],
+            'date_of_birth' => $input['date_of_birth'],
+            'phone' => $input['phone'],
+            'id_number' => $input['id_number'],
+            'portfolio_url' => $input['portfolio_url'],
+            'social_media' => $input['social_media'],
         ]);
     }
 }

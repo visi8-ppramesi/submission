@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Submission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SubmissionController extends Controller
 {
@@ -35,7 +36,29 @@ class SubmissionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'title' => ['required', 'string'],
+            'description' => ['required', 'string'],
+            'team_profile' => ['required', 'string'],
+        ]);
+
+        $validated['user_id'] = auth()->user()->id;
+
+        return response()->json(Submission::create($validated), 200);
+    }
+
+    public function storeSubmissionFile(Request $request)
+    {
+        $column = $request['column'];
+        // $user = auth()->user();
+        $subId = $request['id'];
+        $file = $request->file('file');
+
+        $filepath = $file->store('public/' . $column);
+        $sub = Submission::find($subId);
+        $sub[$column] = Storage::url($filepath);
+
+        return response()->json($sub->save(), 200);
     }
 
     /**

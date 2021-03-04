@@ -8,7 +8,7 @@
 <script>
 export default {
     created(){
-        axios.get('api/testing/').then((response) => {
+        axios.post('api/testing/').then((response) => {
             console.log(response)
         })
     },

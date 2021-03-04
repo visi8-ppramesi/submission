@@ -38,6 +38,9 @@
                 </jet-button>
             </div>
         </form>
+
+        <socialstream-providers v-if="$page.props.socialstream.show" />
+
     </jet-authentication-card>
 </template>
 
@@ -49,6 +52,7 @@
     import JetCheckbox from '@/Jetstream/Checkbox'
     import JetLabel from '@/Jetstream/Label'
     import JetValidationErrors from '@/Jetstream/ValidationErrors'
+    import SocialstreamProviders from '@/Socialstream/Providers'
 
     export default {
         components: {
@@ -58,7 +62,8 @@
             JetInput,
             JetCheckbox,
             JetLabel,
-            JetValidationErrors
+            JetValidationErrors,
+            SocialstreamProviders
         },
 
         props: {
@@ -78,16 +83,14 @@
 
         methods: {
             submit() {
-                axios.get('/sanctum/csrf-cookie').then(response => {
-                    this.form
-                        .transform(data => ({
-                            ... data,
-                            remember: this.form.remember ? 'on' : ''
-                        }))
-                        .post(this.route('login'), {
-                            onFinish: () => this.form.reset('password'),
-                        })
-                })
+                this.form
+                    .transform(data => ({
+                        ... data,
+                        remember: this.form.remember ? 'on' : ''
+                    }))
+                    .post(this.route('login'), {
+                        onFinish: () => this.form.reset('password'),
+                    })
             }
         }
     }
