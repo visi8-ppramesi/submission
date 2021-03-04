@@ -6,10 +6,15 @@
             </h2>
         </template>
 
-        <div class="py-12">
+        <div>
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                 <div class="bg-transparent overflow-hidden sm:rounded-lg">
-                    <submit-submission />
+                    <div class="px-md-16 py-md-6">
+                        <v-btn @click="expand = !expand">Create new submission</v-btn>
+                    </div>
+                    <v-expand-transition>
+                        <submit-submission v-show="expand" />
+                    </v-expand-transition>
                     <v-container class="px-md-12 py-md-6 mb-6">
                         <v-row>
                             <v-col>
@@ -35,14 +40,17 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout'
-    import Welcome from '@/Jetstream/Welcome'
     import SubmitSubmission from '../Components/SubmitSubmission'
     import SubmissionCard from '../Components/SubmissionCard'
 
     export default {
+        data(){
+            return {
+                expand: false
+            }
+        },
         components: {
             AppLayout,
-            Welcome,
             SubmitSubmission,
             SubmissionCard
         },

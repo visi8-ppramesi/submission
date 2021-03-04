@@ -15,7 +15,7 @@ export default {
     props: ['submission'],
     methods: {
         goToSubmission(){
-            //get from submission.id
+            this.$inertia.get('/submission/' + this.submission.id)
         }
     }
 }

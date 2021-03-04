@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Submission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class SubmissionController extends Controller
 {
@@ -69,7 +70,9 @@ class SubmissionController extends Controller
      */
     public function show(Submission $submission)
     {
-        //
+        return Inertia::render('Submission', [
+            'submission' => $submission
+        ]);
     }
 
     /**

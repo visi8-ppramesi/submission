@@ -32,6 +32,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function(){
     Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->name('dashboard');
+    Route::get('/submission/{submission}', [SubmissionController::class, 'show'])->name('submission.show');
 
     // Route::post('/submission/submit', [SubmissionController::class, 'store'])->name('submission.store');
 });
