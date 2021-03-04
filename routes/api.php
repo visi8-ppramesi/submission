@@ -17,3 +17,15 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/testing', function(){
+        $m = '';
+        try{
+            $m = auth()->user()->id;
+        }catch(Exception $e){
+            $m = 'nope';
+        }
+        return $m;
+    });
+});

@@ -27,3 +27,17 @@ Route::get('/', function () {
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->name('dashboard');
+
+// Route::middleware(['auth:sanctum'])->group(function () {
+    Route::get('/testing', function(){
+        $m = '';
+        try{
+            $m = auth()->user()->id;
+        }catch(Exception $e){
+            $m = 'nope';
+        }
+        return Inertia::render('Testing', [
+            'user' => $m
+        ]);
+    });
+// });
