@@ -21,84 +21,108 @@
                                 />
                             </div>
                         </v-card-title>
-                        <v-card-text>
-                            <v-list-item two-line>
-                                <v-list-item-content>
-                                    <v-list-item-title v-if="!isEditing">Description</v-list-item-title>
-                                    <v-list-item-subtitle v-if="!isEditing">{{submission.description}}</v-list-item-subtitle>
-                                    <v-textarea
-                                        v-model="submissionData.description"
-                                        label="Description"
-                                        v-else
-                                    ></v-textarea>
-                                </v-list-item-content>
-                            </v-list-item>
-                            <v-list-item one-line>
-                                <v-list-item-content>
-                                    <v-list-item-title v-if="!isEditing"><a :href="submission.story_concept_files">Story concept file</a></v-list-item-title>
-                                    <v-file-input
-                                        v-else
-                                        v-model="submissionData.story_concept_files"
-                                        accept="application/pdf,.zip,.rar"
-                                        label="Story concept (PDF or Zip file, max 200 MB)"
-                                    ></v-file-input>
-                                </v-list-item-content>
-                            </v-list-item>
-                            <v-list-item one-line>
-                                <v-list-item-content>
-                                    <v-list-item-title v-if="!isEditing"><a :href="submission.summary_files">Logline, synopsis, outline or script file</a></v-list-item-title>
-                                    <v-file-input
-                                        v-else
-                                        v-model="submissionData.summary_files"
-                                        accept="application/pdf,.zip,.rar"
-                                        label="Logline, synopsis, outline or script (PDF or Zip file, max 200 MB)"
-                                    ></v-file-input>
-                                </v-list-item-content>
-                            </v-list-item>
-                            <v-list-item one-line>
-                                <v-list-item-content>
-                                    <v-list-item-title v-if="!isEditing"><a :href="submission.character_design">Character design file</a></v-list-item-title>
-                                    <v-file-input
-                                        v-else
-                                        v-model="submissionData.character_design"
-                                        accept="application/pdf,.zip,.rar"
-                                        label="Character design (PDF or Zip file, max 200 MB)"
-                                    ></v-file-input>
-                                </v-list-item-content>
-                            </v-list-item>
-                            <v-list-item one-line>
-                                <v-list-item-content>
-                                    <v-list-item-title v-if="!isEditing"><a :href="submission.world_design">World design file</a></v-list-item-title>
-                                    <v-file-input
-                                        v-else
-                                        v-model="submissionData.world_design"
-                                        accept="application/pdf,.zip,.rar"
-                                        label="World design (PDF or Zip file, max 200 MB)"
-                                    ></v-file-input>
-                                </v-list-item-content>
-                            </v-list-item>
-                            <v-list-item one-line>
-                                <v-list-item-content>
-                                    <v-list-item-title v-if="!isEditing"><a :href="submission.pilot_video">Pilot video</a></v-list-item-title>
-                                    <v-file-input
-                                        v-else
-                                        v-model="submissionData.pilot_video"
-                                        accept="video/mp4,video/x-m4v,video/*"
-                                        label="Pilot video (mp4 file)"
-                                    ></v-file-input>
-                                </v-list-item-content>
-                            </v-list-item>
-                            <v-list-item one-line>
-                                <v-list-item-content>
-                                    <v-list-item-title v-if="!isEditing">Team profile</v-list-item-title>
-                                    <v-list-item-subtitle v-if="!isEditing">{{submission.team_profile}}</v-list-item-subtitle>
-                                    <v-textarea
-                                        v-else
-                                        v-model="submissionData.team_profile"
-                                        label="Team profile"
-                                    ></v-textarea>
-                                </v-list-item-content>
-                            </v-list-item>
+                        <v-card-text class="d-block d-md-inline-flex justify-space-between">
+                            <div class="order-0 order-md-1" :class="{'width-0' : 'isEditing', 'width-4' : '!isEditing'}" v-if="!isEditing">
+                                <v-list-item one-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title v-if="!isEditing">Changes</v-list-item-title>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item v-for="(diff, idx) in diffs" :key="idx">
+                                    <v-card>
+                                        <v-card-title>
+                                            {{dateToString(diff.date)}}
+                                        </v-card-title>
+                                        <v-card-text>
+                                            <div v-for="(change, didx) in diff.changes" :key="didx">
+                                                {{change.name}}: {{change.value}}
+                                            </div>
+                                        </v-card-text>
+                                    </v-card>
+                                    <!-- <v-list-item-content>
+                                        <v-list-item-title v-if="!isEditing">{{dateToString(diff.date)}}</v-list-item-title>
+                                    </v-list-item-content> -->
+                                </v-list-item>
+                            </div>
+                            <div class="order-1 order-md-0" :class="{'width-10' : 'isEditing', 'width-6' : '!isEditing'}">
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title v-if="!isEditing">Description</v-list-item-title>
+                                        <v-list-item-subtitle v-if="!isEditing">{{submission.description}}</v-list-item-subtitle>
+                                        <v-textarea
+                                            v-model="submissionData.description"
+                                            label="Description"
+                                            v-else
+                                        ></v-textarea>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item one-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title v-if="!isEditing"><a :href="submission.story_concept_files">Story concept file</a></v-list-item-title>
+                                        <v-file-input
+                                            v-else
+                                            v-model="submissionData.story_concept_files"
+                                            accept="application/pdf,.zip,.rar"
+                                            label="Story concept (PDF or Zip file, max 200 MB)"
+                                        ></v-file-input>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item one-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title v-if="!isEditing"><a :href="submission.summary_files">Logline, synopsis, outline or script file</a></v-list-item-title>
+                                        <v-file-input
+                                            v-else
+                                            v-model="submissionData.summary_files"
+                                            accept="application/pdf,.zip,.rar"
+                                            label="Logline, synopsis, outline or script (PDF or Zip file, max 200 MB)"
+                                        ></v-file-input>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item one-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title v-if="!isEditing"><a :href="submission.character_design">Character design file</a></v-list-item-title>
+                                        <v-file-input
+                                            v-else
+                                            v-model="submissionData.character_design"
+                                            accept="application/pdf,.zip,.rar"
+                                            label="Character design (PDF or Zip file, max 200 MB)"
+                                        ></v-file-input>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item one-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title v-if="!isEditing"><a :href="submission.world_design">World design file</a></v-list-item-title>
+                                        <v-file-input
+                                            v-else
+                                            v-model="submissionData.world_design"
+                                            accept="application/pdf,.zip,.rar"
+                                            label="World design (PDF or Zip file, max 200 MB)"
+                                        ></v-file-input>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item one-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title v-if="!isEditing"><a :href="submission.pilot_video">Pilot video</a></v-list-item-title>
+                                        <v-file-input
+                                            v-else
+                                            v-model="submissionData.pilot_video"
+                                            accept="video/mp4,video/x-m4v,video/*"
+                                            label="Pilot video (mp4 file)"
+                                        ></v-file-input>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item one-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title v-if="!isEditing">Team profile</v-list-item-title>
+                                        <v-list-item-subtitle v-if="!isEditing">{{submission.team_profile}}</v-list-item-subtitle>
+                                        <v-textarea
+                                            v-else
+                                            v-model="submissionData.team_profile"
+                                            label="Team profile"
+                                        ></v-textarea>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </div>
                         </v-card-text>
                         <v-card-actions>
                             <div class="px-4 mb-4">
@@ -121,7 +145,7 @@ export default {
         this.submissionData.title = this.submission.title
         this.submissionData.description = this.submission.description
         this.submissionData.team_profile = this.submission.team_profile
-        console.log('sadasdfhjksdfahgjksdfahjk')
+        this.diffs = this.diffChanges(this.flatten(this.versions))
     },
     data(){
         return {
@@ -136,15 +160,92 @@ export default {
                 team_profile: '',
                 pilot_video: null
             },
+            diffs: []
         }
     },
     components: {
         AppLayout,
     },
     props: [
-        'submission'
+        'submission',
+        'versions'
     ],
     methods: {
+        processChange(key, value1, value2){
+            const changeKey = {
+                title: 'Title',
+                description: 'Description',
+                story_concept_files: 'Story Concept Files',
+                summary_files: 'Summary Files',
+                character_design: 'Character Design Files',
+                world_design: 'World Design Files',
+                team_profile: 'Team Profile',
+                pilot_video: 'Pilot Video'
+            }
+            switch(key){
+                case 'story_concept_files':
+                case 'summary_files':
+                case 'character_design':
+                case 'world_design':
+                case 'pilot_video':
+                    let v1 = value1.split('/')
+                    let v2 = value2.split('/')
+                    value1 = v1[v1.length - 1]
+                    value2 = v2[v2.length - 1]
+                    console.log(value2)
+                    break;
+            }
+
+            return {
+                value: value1 + ' -> ' + value2,
+                name: changeKey[key]
+            }
+        },
+        dateToString(date){
+            return new Date(date).toLocaleString('id')
+        },
+        flatten(obj){
+            var k = []
+            obj.submission_items = JSON.parse(obj.submission_items)
+            let {forward, ...myObj} = obj
+            k.push(myObj)
+            const recurveFlatten = (obj) => {
+                if(obj.forward){
+                    obj.forward.submission_items = JSON.parse(obj.forward.submission_items)
+                    let {forward, ...myObj} = obj.forward
+                    k.push(myObj)
+                    recurveFlatten(obj.forward)
+                }
+            }
+            recurveFlatten(obj)
+            return k
+        },
+        diffChanges(obj){
+            let changes = []
+            let len = obj.length
+            for(let k = 0; k < len - 1; k++){
+                let changed = false
+                let myChanges = []
+                Object.keys(obj[k].submission_items).forEach((v, i) => {
+                    if(obj[k].submission_items[v] !== obj[k + 1].submission_items[v] && v !== 'created_at' && v !== 'updated_at'){
+                        changed = true
+                        myChanges.push(this.processChange(v, obj[k].submission_items[v], obj[k + 1].submission_items[v]))
+                        // myChanges.push({
+                        //     value: obj[k].submission_items[v] + ' -> ' + obj[k + 1].submission_items[v],
+                        //     name: v
+                        // })
+                    }
+                })
+                if(changed){
+                    changes.push({
+                        changes: myChanges,
+                        date: obj[k].created_at
+                    })
+
+                }
+            }
+            return changes
+        },
         submit(){
             let subFileCols = [
                 'story_concept_files',
@@ -200,3 +301,13 @@ export default {
     }
 }
 </script>
+
+<style lang="scss">
+$percent: 1%;
+@for $k from 0 through 10{
+    .width-#{$k} {
+        width: $k * 10 * $percent;
+    }
+}
+
+</style>

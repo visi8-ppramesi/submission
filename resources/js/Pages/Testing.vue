@@ -22,14 +22,6 @@ export default {
     },
     props:['user'],
     methods: {
-        recurveFlatten(arr, obj){
-            if(obj.forward){
-                obj.forward.submission_items = JSON.parse(obj.forward.submission_items)
-                let {forward, ...myObj} = obj.forward
-                arr.push(myObj)
-                this.recurveFlatten(arr, obj.forward)
-            }
-        },
         flatten(obj){
             var k = []
             obj.submission_items = JSON.parse(obj.submission_items)

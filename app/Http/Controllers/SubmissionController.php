@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Submission;
+use App\Models\SubmissionVersion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -94,8 +95,15 @@ class SubmissionController extends Controller
      */
     public function show(Submission $submission)
     {
+        $subver = SubmissionVersion::where([
+            ['submission_id', '=', $submission->id],
+            ['first', '=', true]
+        ])
+        ->first()
+        ->getForwardVersions();
         return Inertia::render('Submission', [
-            'submission' => $submission
+            'submission' => $submission,
+            'versions' => $subver
         ]);
     }
 
