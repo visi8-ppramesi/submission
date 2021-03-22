@@ -17,12 +17,17 @@ use Inertia\Inertia;
 |
 */
 
+Route::get('/testing', function(){
+    return Inertia::render('Testing');
+});
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
+        // 'hello' => phpinfo()
     ]);
 });
 

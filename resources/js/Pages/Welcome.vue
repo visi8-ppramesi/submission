@@ -181,6 +181,7 @@
             canRegister: Boolean,
             laravelVersion: String,
             phpVersion: String,
+            // hello: String
         }
     }
 </script>

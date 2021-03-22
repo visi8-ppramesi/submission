@@ -74,6 +74,7 @@ export default {
     methods: {
         submit(){
             var self = this
+            var subId
             let subFileCols = [
                 'story_concept_files',
                 'summary_files',
@@ -94,10 +95,12 @@ export default {
             axios.post(this.route('submission.store'), subData)
                 .then((response) => {
                     let reqs = []
+                    subId = response.data.id
                     subFileCols.forEach((col) => {
                         var fileData = new FormData()
                         fileData.append('column', col)
                         fileData.append('id', response.data.id)
+                        // fileData.append('file', response.data[col])
                         fileData.append('file', self.submissionData[col])
 
                         reqs.push(axios.post(
@@ -113,8 +116,11 @@ export default {
                     return Promise.all(reqs)
                 })
                 .then(axios.spread((...responses) => {
-                    self.$inertia.get(self.route('dashboard'))
+                    return axios.post(this.route('submissionversion.store.first', {submission: subId}), null)
                 }))
+                .then((response) => {
+                    self.$inertia.get(self.route('dashboard'))
+                })
                 .catch((e) => {
                     console.log(e)
                 })
