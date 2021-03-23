@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware(['auth:sanctum'])->group(function () {
+Route::middleware(['auth:sanctum', 'permission:create-submission'])->group(function () {
     Route::post('/submission/submit/file', [SubmissionController::class, 'storeSubmissionFile'])->name('submission.store.file');
     Route::post('/submission/update/file/{submission}', [SubmissionController::class, 'updateSubmissionFile'])->name('submission.update.file');
     Route::post('/submission/submit', [SubmissionController::class, 'store'])->name('submission.store');
@@ -29,8 +29,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/submissionversion/submit/first/{submission}', [SubmissionVersionController:: class, 'storeFirst'])->name('submissionversion.store.first');
     Route::post('/submissionversion/submit/{submission}', [SubmissionVersionController:: class, 'store'])->name('submissionversion.store');
-
+});
+Route::middleware(['role:admin', 'auth:sanctum'])->group(function(){
     Route::post('/testing', function(){
-        return SubmissionVersion::find(1)->getForwardVersions();
+        return auth()->user();
+        // return SubmissionVersion::find(1)->getForwardVersions();
     });
 });

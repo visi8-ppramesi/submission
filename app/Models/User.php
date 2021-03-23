@@ -11,15 +11,17 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Laratrust\Traits\LaratrustUserTrait;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
+    use LaratrustUserTrait;
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto {
         getProfilePhotoUrlAttribute as getPhotoUrl;
     }
-    use HasTeams;
+    // use HasTeams;
     use HasConnectedAccounts;
     use Notifiable;
     use TwoFactorAuthenticatable;
@@ -86,5 +88,9 @@ class User extends Authenticatable implements MustVerifyEmail
         }
 
         return $this->getPhotoUrl();
+    }
+
+    public function submissions(){
+        return $this->hasMany(Submission::class);
     }
 }

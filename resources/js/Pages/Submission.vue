@@ -22,13 +22,13 @@
                             </div>
                         </v-card-title>
                         <v-card-text class="d-block d-md-inline-flex justify-space-between">
-                            <div class="order-0 order-md-1" :class="{'width-0' : 'isEditing', 'width-4' : '!isEditing'}" v-if="!isEditing">
+                            <div class="order-0 order-md-1" :class="{'width-0' : isEditing, 'width-6' : !isEditing}" v-if="!isEditing">
                                 <v-list-item one-line>
                                     <v-list-item-content>
                                         <v-list-item-title v-if="!isEditing">Changes</v-list-item-title>
                                     </v-list-item-content>
                                 </v-list-item>
-                                <v-list-item v-for="(diff, idx) in diffs" :key="idx">
+                                <v-list-item v-for="(diff, idx) in diffs" :key="idx" class="mb-2">
                                     <v-card>
                                         <v-card-title>
                                             {{dateToString(diff.date)}}
@@ -44,7 +44,7 @@
                                     </v-list-item-content> -->
                                 </v-list-item>
                             </div>
-                            <div class="order-1 order-md-0" :class="{'width-10' : 'isEditing', 'width-6' : '!isEditing'}">
+                            <div class="order-1 order-md-0" :class="{'width-10' : isEditing, 'width-4' : !isEditing}">
                                 <v-list-item two-line>
                                     <v-list-item-content>
                                         <v-list-item-title v-if="!isEditing">Description</v-list-item-title>

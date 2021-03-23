@@ -35,9 +35,17 @@ Route::get('/', function () {
 //     return Inertia::render('Dashboard');
 // })->name('dashboard');
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function(){
+Route::middleware(['auth:sanctum', 'verified', 'permission:view-own-submissions'])->group(function(){
     Route::get('/dashboard', [DashboardController::class, 'showDashboard'])->name('dashboard');
     Route::get('/submission/{submission}', [SubmissionController::class, 'show'])->name('submission.show');
 
     // Route::post('/submission/submit', [SubmissionController::class, 'store'])->name('submission.store');
+});
+
+Route::middleware(['auth:sanctum', 'role:admin|judge'])->group(function(){
+    Route::get('/dashboard/admin/user/{user}', [DashboardController::class, 'showAdminUser'])->name('dashboard.admin.user'); //show submissions here?
+    Route::get('/dashboard/admin/users', [DashboardController::class, 'showAdminUsers'])->name('dashboard.admin.users');
+    Route::get('/dashboard/admin/submission/{submission}', [DashboardController::class, 'showAdminSubmission'])->name('dashboard.admin.submission');
+    Route::get('/dashboard/admin/submissions', [DashboardController::class, 'showAdminSubmissions'])->name('dashboard.admin.submissions');
+    Route::get('/dashboard/admin', [DashboardController::class, 'showAdminDashboard'])->name('dashboard.admin');
 });

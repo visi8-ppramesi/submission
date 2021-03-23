@@ -2,6 +2,7 @@
 
 namespace App\Actions\Fortify;
 
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -34,7 +35,7 @@ class CreateNewUser implements CreatesNewUsers
             'social_media' => ['required', 'json'],
         ])->validate();
 
-        return User::create([
+        $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
             'full_name' => $input['full_name'],
@@ -46,5 +47,9 @@ class CreateNewUser implements CreatesNewUsers
             'portfolio_url' => $input['portfolio_url'],
             'social_media' => $input['social_media'],
         ]);
+
+        $user->attachRole(Role::where('name', 'artist')->first());
+
+        return $user;
     }
 }

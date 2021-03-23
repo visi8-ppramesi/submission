@@ -49,6 +49,19 @@
                 Submit
             </v-btn>
         </v-card-actions>
+
+        <v-overlay :value="overlay">
+
+            <v-progress-circular
+                :rotate="-90"
+                :size="100"
+                :width="15"
+                :value="value"
+                color="blue"
+            >
+                {{ value }}
+            </v-progress-circular>
+        </v-overlay>
     </v-card>
 </template>
 
@@ -57,6 +70,8 @@ export default {
     name: 'submit-submission',
     data(){
         return {
+            value: 0,
+            overlay: false,
             submissionData:{
                 title: '',
                 description: '',
@@ -73,8 +88,11 @@ export default {
     },
     methods: {
         submit(){
+            this.overlay = true
             var self = this
             var subId
+            var totalSize = 0
+            var current = 0
             let subFileCols = [
                 'story_concept_files',
                 'summary_files',
@@ -85,6 +103,7 @@ export default {
 
             subFileCols.forEach((col) => {
                 console.log(this.submissionData[col])
+                totalSize += this.submissionData[col].size
             })
             let subData = {
                 title: this.submissionData.title,
@@ -109,6 +128,8 @@ export default {
                             {
                                 onUploadProgress: (event) => {
                                     console.log(event)
+                                    current += event.loaded
+                                    self.value = Math.round((current/totalSize) * 100)
                                 }
                             }
                         ))

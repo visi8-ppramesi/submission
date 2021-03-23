@@ -8,7 +8,9 @@ import { App as InertiaApp, plugin as InertiaPlugin } from '@inertiajs/inertia-v
 import PortalVue from 'portal-vue';
 import VueI18n from 'vue-i18n'
 import 'vuetify/dist/vuetify.min.css'
+import _ from 'lodash'
 
+Object.defineProperty(Vue.prototype, '$_', { value: _ });
 Vue.mixin({ methods: { route } });
 Vue.use(InertiaPlugin);
 Vue.use(PortalVue);

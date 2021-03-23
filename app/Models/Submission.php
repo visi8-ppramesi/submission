@@ -15,7 +15,7 @@ class Submission extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function SubmissionVersions(){
+    public function submissionVersions(){
         return $this->hasMany(SubmissionVersion::class);
     }
 }
