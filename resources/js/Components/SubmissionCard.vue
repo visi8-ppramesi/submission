@@ -1,5 +1,5 @@
 <template>
-    <v-card @click="goToSubmission" class="shadow-xl">
+    <v-card :href="route('submission.show', this.submission.id)" class="shadow-xl">
         <v-card-title>
             {{submission.title}}
         </v-card-title>
@@ -15,7 +15,7 @@ export default {
     props: ['submission'],
     methods: {
         goToSubmission(){
-            this.$inertia.get('/submission/' + this.submission.id)
+            this.$inertia.get(route('submission.show', this.submission.id))
         }
     }
 }

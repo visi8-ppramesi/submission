@@ -19,8 +19,11 @@ class DashboardController extends Controller
     }
 
     public function showAdminUser(User $user){
+        $u = User::where('id', $user->id)
+            ->with('submissions')
+            ->first();
         return Inertia::render('Admin/Dashboard/User', [
-            'user' => $user->with('submissions')->first()
+            'user' => $u//$user->with('submissions')->first()
         ]);
     }
 
@@ -37,8 +40,11 @@ class DashboardController extends Controller
         ])
         ->first()
         ->getForwardVersions();
+        $s = Submission::where('id', $submission->id)
+            // ->with('submissionVersions')
+            ->first();
         return Inertia::render('Admin/Dashboard/Submission', [
-            'submission' => $submission->with('submissionVersions')->first(),
+            'submission' => $s,
             'versions' => $subver
         ]);
     }
@@ -50,6 +56,6 @@ class DashboardController extends Controller
     }
 
     public function showAdminDashboard(){
-
+        return Inertia::render('Admin/Dashboard');
     }
 }

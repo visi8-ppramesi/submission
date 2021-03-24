@@ -121,7 +121,7 @@
                     />
                     <div v-for="(acc, idx) in personalData.social_media" :key="idx" class="d-flex flex-row" :class="(idx === 0) ? 'pt-2':''">
                         <v-select
-                            :items="socItems"
+                            :items="socialMediaList"
                             v-model="personalData.social_media[idx].type"
                             label="Social media name"
                             :rules="[v => !!v || 'Social media type required']"
@@ -373,7 +373,7 @@
                     v => /.+@.+\..+/.test(v) || 'E-mail must be valid',
                 ],
                 repeatPassRule: [
-                    v => (this.repeatPass === this.loginData.password) || 'Password must match'
+                    v => (this.loginData.password_confirmation === this.loginData.password) || 'Password must match'
                 ],
                 phoneNumberRules: [
                     v => /^[\+62]?[0-9]{10,13}$/.test(v) || 'Phone number is invalid'

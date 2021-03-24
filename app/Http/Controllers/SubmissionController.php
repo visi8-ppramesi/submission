@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Submission;
 use App\Models\SubmissionVersion;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -133,6 +135,10 @@ class SubmissionController extends Controller
             'team_profile' => ['required', 'string'],
         ]);
 
+        if(auth()->user()->id != $validated['user_id']){
+            return response()->json(['error' => 'Unathorized.'], 401);
+        }
+
         return response()->json($submission->update($validated), 200);
     }
 
@@ -177,8 +183,31 @@ class SubmissionController extends Controller
      * @param  \App\Models\Submission  $submission
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Submission $submission)
+    public function destroy(Submission $submission, Request $request)
     {
-        //
+        $user = auth()->user();
+        if($user->hasRole('admin') || $user->id == $submission['user_id']){
+            try{
+                $submission->delete();
+            }catch(\Error $err){
+                return response()->json(['error' => $err], 500);
+            }
+            return self::parseRedirectURL($request['redirect']);
+        }else{
+            return response()->json(['error' => 'Unathorized.'], 401);
+        }
+    }
+
+    private static function parseRedirectURL($url){
+        $boom = explode('/', $url);
+        for($i = 0; $i < 3; $i++){
+            array_shift($boom);
+        }
+        if(is_numeric(end($boom))){
+            $id = array_pop($boom);
+            return Redirect::route(implode('.', $boom), $id);
+        }else{
+            return Redirect::route(implode('.', $boom));
+        }
     }
 }

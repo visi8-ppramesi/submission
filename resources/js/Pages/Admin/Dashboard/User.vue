@@ -18,6 +18,7 @@
         <admin-table
             :items="user.submissions"
             :keys="subKeys"
+            :routeName="routing"
             title="Submissions"
         ></admin-table>
         <!-- </v-card> -->
@@ -36,6 +37,10 @@ export default {
     },
     data: function(){
         return {
+            routing: {
+                route: 'dashboard.admin.submission',
+                var: 'submission'
+            },
             userFields: ['name', 'email', 'full_name', 'date_of_birth', 'phone', 'id_number', 'portfolio_url'],
             userFieldsTitle: ['Name', 'Email', 'Full Name', 'Date Of Birth', 'Phone', 'ID Number', 'Portfolio URL'],
             keys: [],
@@ -75,28 +80,28 @@ export default {
 
 // }
 .user-info-card{
-    @media (min-width: 560px){
+    @media (min-width: 1264px){
         width:50%;
     }
-    @media (max-width: 560px) and (min-width: 390px){
-        width:100%;
+    @media (max-width: 600px) and (min-width: 1264px){
+        width:70%;
     }
-    @media (max-width: 390px){
+    @media (max-width: 600px){
         width:100%;
     }
 }
 .user-info-container{
-    @media (min-width: 560px){
+    @media (min-width: 601px){
         grid-template-columns: repeat(3, minmax(160px,1fr));
-        width:50%;
+        // width:50%;
     }
-    @media (max-width: 560px) and (min-width: 390px){
-        grid-template-columns: repeat(2, minmax(160px,1fr));
-        width:100%;
-    }
-    @media (max-width: 390px){
+    // @media (max-width: 560px) and (min-width: 390px){
+    //     grid-template-columns: repeat(2, minmax(160px,1fr));
+    //     // width:100%;
+    // }
+    @media (max-width: 600px){
         grid-template-columns: repeat(1, minmax(160px,1fr));
-        width:100%;
+        // width:100%;
     }
     // padding: 5px;
     display: grid;
@@ -107,13 +112,13 @@ export default {
 //     padding: 5px;
 // }
 .user-info{
-    // @media (min-width: 560px){
+    // @media (min-width: 601px){
     //     width:50%;
     // }
     // @media (max-width: 560px) and (min-width: 390px){
     //     width:100%;
     // }
-    // @media (max-width: 390px){
+    // @media (max-width: 600px){
     //     width:100%;
     // }
     height: 90px;
@@ -121,15 +126,15 @@ export default {
     border: 1px solid #80808024;
 }
 .user-info-title{
-    @media (min-width: 560px){
+    @media (min-width: 601px){
         grid-column-start: 1;
         grid-column-end: 4;
     }
-    @media (max-width: 560px) and (min-width: 390px){
-        grid-column-start: 1;
-        grid-column-end: 3;
-    }
-    @media (max-width: 390px){
+    // @media (max-width: 560px) and (min-width: 390px){
+    //     grid-column-start: 1;
+    //     grid-column-end: 3;
+    // }
+    @media (max-width: 600px){
         grid-column-start: 1;
         grid-column-end: 2;
     }

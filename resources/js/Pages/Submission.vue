@@ -21,7 +21,7 @@
                                 />
                             </div>
                         </v-card-title>
-                        <v-card-text class="d-block d-md-inline-flex justify-space-between">
+                        <v-card-text class="d-block d-md-inline-flex justify-start">
                             <div class="order-0 order-md-1" :class="{'width-0' : isEditing, 'width-6' : !isEditing}" v-if="!isEditing">
                                 <v-list-item one-line>
                                     <v-list-item-content>
@@ -127,7 +127,9 @@
                         <v-card-actions>
                             <div class="px-4 mb-4">
                                 <v-btn @click="editSubmission" v-if="!isEditing">Edit submission</v-btn>
-                                <v-btn @click="submit" v-else>Submit</v-btn>
+                                <v-btn @click="deleteSubmission" v-if="!isEditing" color="error">Delete submission</v-btn>
+                                <v-btn @click="submit" v-if="isEditing">Submit</v-btn>
+                                <v-btn @click="closeEdit" v-if="isEditing">Close</v-btn>
                             </div>
                         </v-card-actions>
                     </v-card>
@@ -297,7 +299,16 @@ export default {
         },
         editSubmission(){
             this.isEditing = true
-        }
+        },
+        closeEdit(){
+            this.isEditing = false
+        },
+        deleteSubmission(){
+            if(confirm('Are you sure?') == true){
+                let ref = document.referrer
+                this.$inertia.post(route('submission.delete', {submission: this.submission.id}), {redirect: ref})
+            }
+        },
     }
 }
 </script>

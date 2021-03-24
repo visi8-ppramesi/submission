@@ -18,4 +18,13 @@ class Submission extends Model
     public function submissionVersions(){
         return $this->hasMany(SubmissionVersion::class);
     }
+
+    public static function boot(){
+        parent::boot();
+        self::deleting(function($submission){
+            $submission->submissionVersions()->each(function($subver){
+                $subver->delete();
+            });
+        });
+    }
 }

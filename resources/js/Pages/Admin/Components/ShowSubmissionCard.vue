@@ -3,7 +3,7 @@
         <v-card-title>
             {{submission.title}}
         </v-card-title>
-        <v-card-text class="d-block d-md-inline-flex justify-space-between">
+        <v-card-text class="d-block d-md-inline-flex justify-start">
             <div class="order-0 order-md-1 width-6">
                 <v-list-item class="px-0" one-line>
                     <v-list-item-content>
@@ -81,6 +81,14 @@
                 </v-list-item>
             </div>
         </v-card-text>
+        <v-card-actions>
+            <v-btn
+                color="error"
+                @click="deleteSubmission"
+            >
+                Delete Submission
+            </v-btn>
+        </v-card-actions>
     </v-card>
 </template>
 
@@ -97,6 +105,12 @@ export default {
         }
     },
     methods: {
+        deleteSubmission(){
+            if(confirm('Are you sure?') == true){
+                let ref = document.referrer
+                this.$inertia.post(route('submission.delete', {submission: this.submission.id}), {redirect: ref})
+            }
+        },
         parseLink(link){
             let m = link.split('/')
             return m[m.length - 1]
@@ -181,13 +195,10 @@ export default {
 </script>
 <style lang="scss">
 .submission-container{
-    @media (min-width: 560px){
+    @media (min-width: 601px){
         width:70%;
     }
-    @media (max-width: 560px) and (min-width: 390px){
-        width:100%;
-    }
-    @media (max-width: 390px){
+    @media (max-width: 600px){
         width:100%;
     }
 }

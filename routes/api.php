@@ -24,8 +24,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::middleware(['auth:sanctum', 'permission:create-submission'])->group(function () {
     Route::post('/submission/submit/file', [SubmissionController::class, 'storeSubmissionFile'])->name('submission.store.file');
     Route::post('/submission/update/file/{submission}', [SubmissionController::class, 'updateSubmissionFile'])->name('submission.update.file');
+
     Route::post('/submission/submit', [SubmissionController::class, 'store'])->name('submission.store');
     Route::post('/submission/update/{submission}', [SubmissionController::class, 'update'])->name('submission.update');
+
+    Route::post('/submission/delete/{submission}', [SubmissionController::class, 'destroy'])->name('submission.delete');
 
     Route::post('/submissionversion/submit/first/{submission}', [SubmissionVersionController:: class, 'storeFirst'])->name('submissionversion.store.first');
     Route::post('/submissionversion/submit/{submission}', [SubmissionVersionController:: class, 'store'])->name('submissionversion.store');

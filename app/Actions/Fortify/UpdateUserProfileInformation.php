@@ -22,6 +22,12 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'photo' => ['nullable', 'image', 'max:1024'],
+            'full_name' => ['required', 'string', 'max:255'],
+            'date_of_birth' => ['required', 'date'],
+            'phone' => ['required', 'string'],
+            'id_number' => ['required', 'string'],
+            'portfolio_url' => ['required', 'url'],
+            'social_media' => ['required', 'json'],
         ])->validateWithBag('updateProfileInformation');
 
         if (isset($input['photo'])) {
@@ -35,6 +41,12 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $user->forceFill([
                 'name' => $input['name'],
                 'email' => $input['email'],
+                'full_name' => $input['full_name'],
+                'phone' => $input['phone'],
+                'date_of_birth' => $input['date_of_birth'],
+                'id_number' => $input['id_number'],
+                'portfolio_url' => $input['portfolio_url'],
+                'social_media' => $input['social_media'],
             ])->save();
         }
     }
@@ -52,6 +64,12 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'name' => $input['name'],
             'email' => $input['email'],
             'email_verified_at' => null,
+            'full_name' => $input['full_name'],
+            'phone' => $input['phone'],
+            'date_of_birth' => $input['date_of_birth'],
+            'id_number' => $input['id_number'],
+            'portfolio_url' => $input['portfolio_url'],
+            'social_media' => $input['social_media'],
         ])->save();
 
         $user->sendEmailVerificationNotification();

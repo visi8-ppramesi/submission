@@ -54,6 +54,47 @@
                 <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" />
                 <jet-input-error :message="form.errors.email" class="mt-2" />
             </div>
+
+            <div class="col-span-6 sm:col-span-4">
+                <jet-label for="full_name" value="Full Name" />
+                <jet-input id="full_name" type="text" class="mt-1 block w-full" v-model="form.full_name" autocomplete="full_name" />
+                <jet-input-error :message="form.errors.full_name" class="mt-2" />
+            </div>
+
+            <div class="col-span-6 sm:col-span-4">
+                <jet-label for="date_of_birth" value="Date Of Birth" />
+                <jet-input id="date_of_birth" type="text" class="mt-1 block w-full" v-model="form.date_of_birth" autocomplete="date_of_birth" />
+                <jet-input-error :message="form.errors.date_of_birth" class="mt-2" />
+            </div>
+
+            <div class="col-span-6 sm:col-span-4">
+                <jet-label for="phone" value="Phone" />
+                <jet-input id="phone" type="text" class="mt-1 block w-full" v-model="form.phone" autocomplete="phone" />
+                <jet-input-error :message="form.errors.phone" class="mt-2" />
+            </div>
+
+            <div class="col-span-6 sm:col-span-4">
+                <jet-label for="id_number" value="ID Number" />
+                <jet-input id="id_number" type="text" class="mt-1 block w-full" v-model="form.id_number" autocomplete="id_number" />
+                <jet-input-error :message="form.errors.id_number" class="mt-2" />
+            </div>
+
+            <div class="col-span-6 sm:col-span-4">
+                <jet-label for="portfolio_url" value="Portfolio URL" />
+                <jet-input id="portfolio_url" type="text" class="mt-1 block w-full" v-model="form.portfolio_url" autocomplete="portfolio_url" />
+                <jet-input-error :message="form.errors.portfolio_url" class="mt-2" />
+            </div>
+
+            <div class="col-span-6 sm:col-span-4">
+                <jet-label for="social_media" value="Social Media" />
+                <div v-for="(acc, idx) in form.social_media" :key="idx" class="social-media-container">
+                    <jet-select :options="socialMediaList" v-model="acc.type"/>
+                    <jet-input :id="'social_media_'+idx" type="text" class="mt-1 block w-full" v-model="acc.url" autocomplete="social_media" />
+                    <v-icon v-if="idx === 0" @click="addSocmed">mdi-plus-circle-outline</v-icon>
+                    <v-icon v-else @click="delSocmed(idx)">mdi-close-circle-outline</v-icon>
+                </div>
+                <jet-input-error :message="form.errors.social_media" class="mt-2" />
+            </div>
         </template>
 
         <template #actions>
@@ -76,6 +117,7 @@
     import JetLabel from '@/Jetstream/Label'
     import JetActionMessage from '@/Jetstream/ActionMessage'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton'
+    import JetSelect from '@/Jetstream/Select'
 
     export default {
         components: {
@@ -86,6 +128,7 @@
             JetInputError,
             JetLabel,
             JetSecondaryButton,
+            JetSelect,
         },
 
         props: ['user'],
@@ -96,6 +139,12 @@
                     _method: 'PUT',
                     name: this.user.name,
                     email: this.user.email,
+                    full_name: this.user.full_name,
+                    date_of_birth: this.user.date_of_birth,
+                    phone: this.user.phone,
+                    id_number: this.user.id_number,
+                    portfolio_url: this.user.portfolio_url,
+                    social_media: JSON.parse(this.user.social_media),
                     photo: null,
                 }),
 
@@ -104,14 +153,28 @@
         },
 
         methods: {
+            addSocmed(){
+                this.form.social_media.push({
+                    type: '',
+                    url: ''
+                })
+            },
+            delSocmed(idx){
+                this.form.social_media.splice(idx, 1)
+            },
             updateProfileInformation() {
                 if (this.$refs.photo) {
                     this.form.photo = this.$refs.photo.files[0]
                 }
 
+                this.form.social_media = JSON.stringify(this.form.social_media)
+
                 this.form.post(route('user-profile-information.update'), {
                     errorBag: 'updateProfileInformation',
-                    preserveScroll: true
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        this.form.social_media = JSON.parse(this.form.social_media)
+                    }
                 });
             },
 
@@ -138,3 +201,10 @@
         },
     }
 </script>
+
+<style lang="scss">
+.social-media-container{
+    display: flex;
+    gap: 10px;
+}
+</style>

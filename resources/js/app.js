@@ -9,9 +9,11 @@ import PortalVue from 'portal-vue';
 import VueI18n from 'vue-i18n'
 import 'vuetify/dist/vuetify.min.css'
 import _ from 'lodash'
+import socialMediaList from './Mixins/SocialMediaList'
 
 Object.defineProperty(Vue.prototype, '$_', { value: _ });
 Vue.mixin({ methods: { route } });
+Vue.mixin(socialMediaList);
 Vue.use(InertiaPlugin);
 Vue.use(PortalVue);
 Vue.use(Vuetify)

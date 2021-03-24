@@ -26,21 +26,21 @@
                     <jet-section-border />
                 </div>
 
-                <div v-if="$page.props.jetstream.canManageTwoFactorAuthentication && $page.props.socialstream.hasPassword">
+                <!-- <div v-if="$page.props.jetstream.canManageTwoFactorAuthentication && $page.props.socialstream.hasPassword">
                     <two-factor-authentication-form class="mt-10 sm:mt-0" />
 
                     <jet-section-border />
-                </div>
+                </div> -->
 
                 <div v-if="$page.props.socialstream.show">
                     <connected-accounts-form class="mt-10 sm:mt-0" />
                 </div>
 
-                <div v-if="$page.props.socialstream.hasPassword">
+                <!-- <div v-if="$page.props.socialstream.hasPassword">
                     <jet-section-border />
 
                     <logout-other-browser-sessions-form  :sessions="sessions" class="mt-10 sm:mt-0" />
-                </div>
+                </div> -->
 
                 <div v-if="$page.props.socialstream.hasPassword">
                     <jet-section-border />
