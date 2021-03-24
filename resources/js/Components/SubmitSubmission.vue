@@ -49,9 +49,37 @@
                 Submit
             </v-btn>
         </v-card-actions>
+        <v-dialog
+            v-model="dialog"
+            width="600px"
+        >
+            <v-card>
+                <v-card-title>
+                    <span class="headline">Error</span>
+                </v-card-title>
+                <v-card-text>
+                    <v-alert
+                        dense
+                        outlined
+                        type="error"
+                    >
+                        Something went wrong. Please retry.
+                    </v-alert>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                        color="green darken-1"
+                        text
+                        @click="dialog = false"
+                    >
+                        Close
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
 
         <v-overlay :value="overlay">
-
             <v-progress-circular
                 :rotate="-90"
                 :size="100"
@@ -82,6 +110,7 @@ export default {
                 team_profile: '',
                 pilot_video: null
             },
+            dialog: false
         };
     },
     created(){
@@ -143,6 +172,11 @@ export default {
                     self.$inertia.get(self.route('dashboard'))
                 })
                 .catch((e) => {
+                    if(subId){
+                        axios.post(route('submission.delete', {submission: subId}), {redirect: ''})
+                    }
+                    this.overlay = false
+                    this.dialog = true
                     console.log(e)
                 })
         }

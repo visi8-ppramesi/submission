@@ -14,7 +14,7 @@ class DashboardController extends Controller
         $user = auth()->user();
         $subs = Submission::where('user_id', $user->id)->get();
         return Inertia::render('Dashboard', [
-            'submissions' => $subs
+            'submissions' => $subs,
         ]);
     }
 
@@ -56,6 +56,17 @@ class DashboardController extends Controller
     }
 
     public function showAdminDashboard(){
-        return Inertia::render('Admin/Dashboard');
+        $lastWeek = date('Y-m-d H:i:s', strtotime('-1 week'));
+        $today = date('Y-m-d H:i:s', strtotime('today +1 day'));
+        $recentUsers = User::whereBetween('created_at', [$lastWeek, $today])->orderBy('created_at', 'desc')->get();
+        $recentSubs = Submission::whereBetween('created_at', [$lastWeek, $today])->orderBy('created_at', 'desc')->with('user')->get();
+        $recentUpdateSubs = Submission::whereBetween('updated_at', [$lastWeek, $today])->orderBy('updated_at', 'desc')->with('user')->get();
+
+        return Inertia::render('Admin/Dashboard', [
+            'recentUsers' => $recentUsers,
+            'recentSubs' => $recentSubs,
+            'recentUpdateSubs' => $recentUpdateSubs,
+            'aggregatedSubs' => Submission::getAggregatedRecords($lastWeek, $today, 'created_at')
+        ]);
     }
 }

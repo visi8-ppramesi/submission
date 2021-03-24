@@ -54,6 +54,10 @@ class SubmissionController extends Controller
 
     public function storeSubmissionFile(Request $request)
     {
+        // $flip = mt_rand() / mt_getrandmax();
+        // if($flip < 0.5){
+        //     throw 'error';
+        // }
         $column = $request['column'];
         // $user = auth()->user();
         $subId = $request['id'];
@@ -135,7 +139,7 @@ class SubmissionController extends Controller
             'team_profile' => ['required', 'string'],
         ]);
 
-        if(auth()->user()->id != $validated['user_id']){
+        if(auth()->user()->id != $submission['user_id']){
             return response()->json(['error' => 'Unathorized.'], 401);
         }
 
@@ -143,6 +147,10 @@ class SubmissionController extends Controller
     }
 
     public function updateSubmissionFile(Request $request, Submission $submission){
+        // $flip = mt_rand() / mt_getrandmax();
+        // if($flip < 0.5){
+        //     throw 'error';
+        // }
         $column = $request['column'];
         // $user = auth()->user();
         $file = $request->file('file');
@@ -177,6 +185,25 @@ class SubmissionController extends Controller
         return response()->json($submission->save(), 200);
     }
 
+    public function restore(Submission $submission, Request $request){
+        $validated = $request->validate([
+            'title' => ['required', 'string'],
+            'description' => ['required', 'string'],
+            'team_profile' => ['required', 'string'],
+            'character_design' => ['required', 'string'],
+            'pilot_video' => ['required', 'string'],
+            'story_concept_files' => ['required', 'string'],
+            'summary_files' => ['required', 'string'],
+            'world_design' => ['required', 'string'],
+        ]);
+
+        if(auth()->user()->id != $submission['user_id']){
+            return response()->json(['error' => 'Unathorized.'], 401);
+        }
+
+        return response()->json($submission->update($validated), 200);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -199,6 +226,9 @@ class SubmissionController extends Controller
     }
 
     private static function parseRedirectURL($url){
+        if(empty($url)){
+            return response()->json([], 200);
+        }
         $boom = explode('/', $url);
         for($i = 0; $i < 3; $i++){
             array_shift($boom);

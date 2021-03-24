@@ -29,6 +29,7 @@ Route::middleware(['auth:sanctum', 'permission:create-submission'])->group(funct
     Route::post('/submission/update/{submission}', [SubmissionController::class, 'update'])->name('submission.update');
 
     Route::post('/submission/delete/{submission}', [SubmissionController::class, 'destroy'])->name('submission.delete');
+    Route::post('/submission/restore/{submission}', [SubmissionController::class, 'restore'])->name('submission.restore');
 
     Route::post('/submissionversion/submit/first/{submission}', [SubmissionVersionController:: class, 'storeFirst'])->name('submissionversion.store.first');
     Route::post('/submissionversion/submit/{submission}', [SubmissionVersionController:: class, 'store'])->name('submissionversion.store');

@@ -58,7 +58,10 @@
                                 </v-list-item>
                                 <v-list-item one-line>
                                     <v-list-item-content>
-                                        <v-list-item-title v-if="!isEditing"><a :href="submission.story_concept_files">Story concept file</a></v-list-item-title>
+                                        <v-list-item-title v-if="!isEditing">Story concept file</v-list-item-title>
+                                        <v-list-item-subtitle v-if="!isEditing">
+                                            <a :href="submission.story_concept_files">{{parseLink(submission.story_concept_files)}}</a>
+                                        </v-list-item-subtitle>
                                         <v-file-input
                                             v-else
                                             v-model="submissionData.story_concept_files"
@@ -69,7 +72,10 @@
                                 </v-list-item>
                                 <v-list-item one-line>
                                     <v-list-item-content>
-                                        <v-list-item-title v-if="!isEditing"><a :href="submission.summary_files">Logline, synopsis, outline or script file</a></v-list-item-title>
+                                        <v-list-item-title v-if="!isEditing">Logline, synopsis, outline or script file</v-list-item-title>
+                                        <v-list-item-subtitle v-if="!isEditing">
+                                            <a :href="submission.summary_files">{{parseLink(submission.summary_files)}}</a>
+                                        </v-list-item-subtitle>
                                         <v-file-input
                                             v-else
                                             v-model="submissionData.summary_files"
@@ -80,7 +86,10 @@
                                 </v-list-item>
                                 <v-list-item one-line>
                                     <v-list-item-content>
-                                        <v-list-item-title v-if="!isEditing"><a :href="submission.character_design">Character design file</a></v-list-item-title>
+                                        <v-list-item-title v-if="!isEditing">Character design file</v-list-item-title>
+                                        <v-list-item-subtitle v-if="!isEditing">
+                                            <a :href="submission.character_design">{{parseLink(submission.character_design)}}</a>
+                                        </v-list-item-subtitle>
                                         <v-file-input
                                             v-else
                                             v-model="submissionData.character_design"
@@ -91,7 +100,10 @@
                                 </v-list-item>
                                 <v-list-item one-line>
                                     <v-list-item-content>
-                                        <v-list-item-title v-if="!isEditing"><a :href="submission.world_design">World design file</a></v-list-item-title>
+                                        <v-list-item-title v-if="!isEditing">World design file</v-list-item-title>
+                                        <v-list-item-subtitle v-if="!isEditing">
+                                            <a :href="submission.world_design">{{parseLink(submission.world_design)}}</a>
+                                        </v-list-item-subtitle>
                                         <v-file-input
                                             v-else
                                             v-model="submissionData.world_design"
@@ -102,7 +114,10 @@
                                 </v-list-item>
                                 <v-list-item one-line>
                                     <v-list-item-content>
-                                        <v-list-item-title v-if="!isEditing"><a :href="submission.pilot_video">Pilot video</a></v-list-item-title>
+                                        <v-list-item-title v-if="!isEditing">Pilot video</v-list-item-title>
+                                        <v-list-item-subtitle v-if="!isEditing">
+                                            <a :href="submission.pilot_video">{{parseLink(submission.pilot_video)}}</a>
+                                        </v-list-item-subtitle>
                                         <v-file-input
                                             v-else
                                             v-model="submissionData.pilot_video"
@@ -135,6 +150,46 @@
                     </v-card>
                 </div>
             </div>
+            <v-dialog
+                v-model="dialog"
+                width="600px"
+            >
+                <v-card>
+                    <v-card-title>
+                        <span class="headline">Error</span>
+                    </v-card-title>
+                    <v-card-text>
+                        <v-alert
+                            dense
+                            outlined
+                            type="error"
+                        >
+                            Something went wrong. Please retry.
+                        </v-alert>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn
+                            color="green darken-1"
+                            text
+                            @click="dialog = false"
+                        >
+                            Close
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <v-overlay :value="overlay">
+                <v-progress-circular
+                    :rotate="-90"
+                    :size="100"
+                    :width="15"
+                    :value="value"
+                    color="blue"
+                >
+                    {{ value }}
+                </v-progress-circular>
+            </v-overlay>
         </div>
     </app-layout>
 </template>
@@ -147,10 +202,15 @@ export default {
         this.submissionData.title = this.submission.title
         this.submissionData.description = this.submission.description
         this.submissionData.team_profile = this.submission.team_profile
+        this.oldValues = this.$_.cloneDeep(this.submission)
         this.diffs = this.diffChanges(this.flatten(this.versions))
     },
     data(){
         return {
+            oldValues: null,
+            value: 0,
+            overlay: false,
+            dialog: false,
             isEditing: false,
             submissionData:{
                 title: '',
@@ -173,6 +233,10 @@ export default {
         'versions'
     ],
     methods: {
+        parseLink(link){
+            let m = link.split('/')
+            return m[m.length - 1]
+        },
         processChange(key, value1, value2){
             const changeKey = {
                 title: 'Title',
@@ -256,6 +320,19 @@ export default {
                 'world_design',
                 'pilot_video'
             ]
+            var totalSize = 0
+            var current = 0
+            var self = this
+
+            this.overlay = true
+
+            subFileCols.forEach((col) => {
+                if(this.submissionData[col]){
+                    console.log(this.submissionData[col])
+                    totalSize += this.submissionData[col].size
+                }
+            })
+
             let fileReqs = []
             subFileCols.forEach((col) => {
                 if(this.submissionData[col] !== null){
@@ -270,6 +347,8 @@ export default {
                             fileData,
                             {
                                 onUploadProgress: (event) => {
+                                    current += event.loaded
+                                    self.value = Math.round((current/totalSize) * 100)
                                     console.log(event)
                                 }
                             }
@@ -294,6 +373,14 @@ export default {
                 this.$inertia.get(self.route('dashboard'))
             })
             .catch((e) => {
+                axios.post(this.route('submission.restore', {submission: this.submission.id}), this.oldValues)
+                    .then((response) => {
+                        this.dialog = true
+                        this.overlay = false
+                    })
+                    .catch((e) => {
+                        alert('something fucked up really bad')
+                    })
                 console.log(e)
             })
         },
