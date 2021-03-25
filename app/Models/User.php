@@ -15,7 +15,10 @@ use Laratrust\Traits\LaratrustUserTrait;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use LaratrustUserTrait;
+    use LaratrustUserTrait, HasTeams{
+        LaratrustUserTrait::allTeams insteadof HasTeams;
+        HasTeams::allTeams as jetstreamAllTeams;
+    }
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto {
