@@ -19,6 +19,10 @@ class Submission extends AggregatableModel
         return $this->hasMany(SubmissionVersion::class);
     }
 
+    public function team(){
+        return $this->belongsTo(Team::class);
+    }
+
     public static function boot(){
         parent::boot();
         self::deleting(function($submission){

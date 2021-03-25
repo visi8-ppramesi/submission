@@ -48,6 +48,7 @@ class SubmissionController extends Controller
         ]);
 
         $validated['user_id'] = auth()->user()->id;
+        $validated['team_id'] = auth()->user()->currentTeam->id;
 
         return response()->json(Submission::create($validated), 200);
     }

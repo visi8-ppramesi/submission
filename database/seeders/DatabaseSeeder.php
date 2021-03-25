@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Permission;
 use App\Models\Role;
+use App\Models\Team;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -28,7 +29,9 @@ class DatabaseSeeder extends Seeder
             'phone' => 'phone',
             'id_number' => 'id_number',
             'portfolio_url' => 'portfolio_url',
-            'social_media' => '[{type: "facebook", url: "http://www.facebook.com"}]',
+            'social_media' => json_encode([
+                ['type' => "facebook", 'url' => "http://www.facebook.com"]
+            ]),
             'email_verified_at' => '2021-03-22 16:44:08'
         ]);
 
@@ -42,7 +45,9 @@ class DatabaseSeeder extends Seeder
             'phone' => 'phone',
             'id_number' => '9087654',
             'portfolio_url' => 'http://www.facebook.com',
-            'social_media' => '[{type: "facebook", url: "http://www.facebook.com"}]',
+            'social_media' => json_encode([
+                ['type' => "facebook", 'url' => "http://www.facebook.com"]
+            ]),
             'email_verified_at' => '2021-03-22 16:44:08'
         ]);
 
@@ -86,21 +91,18 @@ class DatabaseSeeder extends Seeder
         $artist->attachPermission($createSub);
         $artist->attachPermission($viewOwnSub);
 
-        $testuser = \App\Models\User::create([
-            'email' => 'testuser@visi8.com',
-            'name' => 'testuser',
-            'password' => Hash::make('123qweasd'),
-            'full_name' => 'test user',
-            'phone' => '12345678',
-            'date_of_birth' => '1989-04-20',
-            'phone' => 'phone',
-            'id_number' => '9087654',
-            'portfolio_url' => 'http://www.facebook.com',
-            'social_media' => '{"facebook": "http://www.facebook.com"}',
-            'email_verified_at' => '2021-03-22 16:44:08'
-        ]);
-
         $user->attachRole($admin);
         $testuser->attachRole($artist);
+
+        $user->ownedTeams()->save(Team::forceCreate([
+            'user_id' => $user->id,
+            'name' => explode(' ', $user->name, 2)[0]."'s Team",
+            'personal_team' => true,
+        ]));
+        $testuser->ownedTeams()->save(Team::forceCreate([
+            'user_id' => $testuser->id,
+            'name' => explode(' ', $testuser->name, 2)[0]."'s Team",
+            'personal_team' => true,
+        ]));
     }
 }

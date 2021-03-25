@@ -15,6 +15,10 @@ class SubmissionVersion extends Model
     //     'submission_items' => 'array'
     // ];
 
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+
     public function nextVersion(){
         return $this->hasOne(SubmissionVersion::class, 'previous_submission_version_id');
     }

@@ -18,6 +18,7 @@ class CreateSubmissionVersionsTable extends Migration
             $table->json('submission_items');
             $table->foreignId('previous_submission_version_id')->nullable();
             $table->foreignId('submission_id');
+            $table->foreignId('user_id');
             $table->boolean('current');
             $table->boolean('first');
             $table->timestamps();

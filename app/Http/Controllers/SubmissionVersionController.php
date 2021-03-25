@@ -36,6 +36,7 @@ class SubmissionVersionController extends Controller
      */
     public function store(Request $request, Submission $submission)
     {
+        $userid = auth()->user()->id;
         $jsonObj = json_encode($submission->toArray());
         $subId = $submission->id;
         $curr = SubmissionVersion::where([
@@ -48,7 +49,8 @@ class SubmissionVersionController extends Controller
             'current' => true,
             'submission_items' => $jsonObj,
             'submission_id' => $subId,
-            'previous_submission_version_id' => $curr->id
+            'previous_submission_version_id' => $curr->id,
+            'user_id' => $userid,
         ]);
 
         return response()->json($newsubver, 200);

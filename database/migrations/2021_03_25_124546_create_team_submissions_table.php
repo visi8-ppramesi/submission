@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSubmissionsTable extends Migration
+class CreateTeamSubmissionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateSubmissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('submissions', function (Blueprint $table) {
+        Schema::create('team_submissions', function (Blueprint $table) {
             $table->id();
             $table->text('title');
             $table->text('description');
             $table->foreignId('user_id');
-            $table->foreignId('team_id');
             $table->text('story_concept_files')->nullable();
             $table->text('summary_files')->nullable();
             $table->text('character_design')->nullable();
@@ -36,6 +35,6 @@ class CreateSubmissionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('submissions');
+        Schema::dropIfExists('team_submissions');
     }
 }

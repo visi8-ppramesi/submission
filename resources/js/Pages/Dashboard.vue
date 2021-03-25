@@ -55,7 +55,7 @@
             SubmissionCard
         },
         props:{
-            submissions: Array,
+            submissions: Array
         }
     }
 </script>

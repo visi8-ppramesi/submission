@@ -14,7 +14,7 @@ class DashboardController extends Controller
         $user = auth()->user();
         $subs = Submission::where('user_id', $user->id)->get();
         return Inertia::render('Dashboard', [
-            'submissions' => $subs,
+            'submissions' => $subs
         ]);
     }
 
