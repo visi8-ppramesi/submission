@@ -63,13 +63,15 @@ class SubmissionVersionController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function storeFirst(Request $request, Submission $submission){
+        $userid = auth()->user()->id;
         $jsonObj = json_encode($submission->toArray());
         $subId = $submission->id;
         $newsubver = SubmissionVersion::create([
             'first' => true,
             'current' => true,
             'submission_items' => $jsonObj,
-            'submission_id' => $subId
+            'submission_id' => $subId,
+            'user_id' => $userid,
         ]);
 
         return response()->json($newsubver, 200);

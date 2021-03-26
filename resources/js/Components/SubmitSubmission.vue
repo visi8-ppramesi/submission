@@ -131,8 +131,10 @@ export default {
             ]
 
             subFileCols.forEach((col) => {
-                console.log(this.submissionData[col])
-                totalSize += this.submissionData[col].size
+                if(this.submissionData[col]){
+                    console.log(this.submissionData[col])
+                    totalSize += this.submissionData[col].size
+                }
             })
             let subData = {
                 title: this.submissionData.title,

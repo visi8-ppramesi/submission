@@ -43,7 +43,7 @@
                         <v-list-item-title v-show="!editingField[field.name]">{{$_.startCase(field.name)}}</v-list-item-title>
                         <v-list-item-subtitle>
                             <div class="field-container" v-show="!editingField[field.name]">
-                                <span class="field-value">{{submission.description}}</span>
+                                <span class="field-value">{{getSubmissionValue(field)}}</span>
                                 <span class="field-edit"><v-icon @click="editField(field)">mdi-tooltip-edit</v-icon></span>
                             </div>
                             <div class="field-container" v-show="editingField[field.name]">

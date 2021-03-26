@@ -27,6 +27,12 @@
                 <jet-input id="name" type="text" class="mt-1 block w-full" v-model="form.name" autofocus />
                 <jet-input-error :message="form.errors.name" class="mt-2" />
             </div>
+
+            <div class="col-span-6 sm:col-span-4">
+                <jet-label for="team_profile" value="Team Profile" />
+                <jet-textarea id="team_profile" type="text" class="mt-1 block w-full" v-model="form.team_profile" autofocus />
+                <jet-input-error :message="form.errors.team_profile" class="mt-2" />
+            </div>
         </template>
 
         <template #actions>
@@ -43,6 +49,7 @@
     import JetInput from '@/Jetstream/Input'
     import JetInputError from '@/Jetstream/InputError'
     import JetLabel from '@/Jetstream/Label'
+    import JetTextarea from '@/Jetstream/Textarea'
 
     export default {
         components: {
@@ -51,12 +58,14 @@
             JetInput,
             JetInputError,
             JetLabel,
+            JetTextarea,
         },
 
         data() {
             return {
                 form: this.$inertia.form({
                     name: '',
+                    team_profile: '',
                 })
             }
         },

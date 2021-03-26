@@ -16,14 +16,14 @@ class CreateSubmissionsTable extends Migration
         Schema::create('submissions', function (Blueprint $table) {
             $table->id();
             $table->text('title');
-            $table->text('description');
+            $table->text('description')->nullable();
             $table->foreignId('user_id');
             $table->foreignId('team_id');
             $table->text('story_concept_files')->nullable();
             $table->text('summary_files')->nullable();
             $table->text('character_design')->nullable();
             $table->text('world_design')->nullable();
-            $table->text('team_profile');
+            $table->text('team_profile')->nullable();
             $table->text('pilot_video')->nullable();
             $table->timestamps();
         });

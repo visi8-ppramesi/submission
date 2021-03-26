@@ -139,8 +139,8 @@ class SubmissionController extends Controller
             'description' => ['required', 'string'],
             'team_profile' => ['required', 'string'],
         ]);
-
-        if(auth()->user()->id != $submission['user_id']){
+        $user = auth()->user();
+        if(!($user->id == $submission['user_id'] || $user->currentTeam->id == $submission['team_id'])){
             return response()->json(['error' => 'Unathorized.'], 401);
         }
 
